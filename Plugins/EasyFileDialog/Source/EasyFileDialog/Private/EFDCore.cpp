@@ -1,23 +1,27 @@
 // Copyright 2017-2020 Firefly Studio. All Rights Reserved.
-
-
 #include "EFDCore.h"
+#include "combaseapi.h"
+#include "commdlg.h"
+#include "Containers/Array.h"
+#include <HAL/FileManager.h>
+#include "HAL/Platform.h"
+#include "HAL/UnrealMemory.h"
+#include <Microsoft/COMPointer.h>
+#include "Misc/CoreMiscDefines.h"
+#include "Misc/CString.h"
+#include <Misc/Paths.h>
+#include "ShObjIdl_core.h"
+#include "Windows.h"
+#include "WTypesbase.h"
 
-#include "shlobj.h" 
-
-#include <Runtime\Core\Public\HAL\FileManager.h>
-#include <Runtime\Core\Public\Misc\Paths.h>
-#include <Runtime\Core\Public\Windows\COMPointer.h>
-
-
-#define MAX_FILETYPES_STR 4096
-#define MAX_FILENAME_STR 65536 // This buffer has to be big enough to contain the names of all the selected files as well as the null characters between them and the null character at the end
+constexpr auto MAX_FILETYPES_STR{ 4096u };
+constexpr auto MAX_FILENAME_STR{ 65536u }; // This buffer has to be big enough to contain the names of all the selected files as well as the null characters between them and the null character at the end
 
 bool EFDCore::OpenFileDialogCore(const FString& DialogTitle, const FString& DefaultPath, const FString& DefaultFile, const FString& FileTypes, uint32 Flags, TArray< FString >& OutFilenames)
 {
 	// Calling the FileDialogShared function using save parameter with false. 
-	int OutFilterIndex=0;
-	return FileDialogShared(false, nullptr, DialogTitle, DefaultPath, DefaultFile, FileTypes, Flags, OutFilenames,OutFilterIndex);
+	int OutFilterIndex = 0;
+	return FileDialogShared(false, nullptr, DialogTitle, DefaultPath, DefaultFile, FileTypes, Flags, OutFilenames, OutFilterIndex);
 }
 
 bool EFDCore::SaveFileDialogCore(const FString& DialogTitle, const FString& DefaultPath, const FString& DefaultFile, const FString& FileTypes, uint32 Flags, TArray< FString >& OutFilenames)
@@ -211,7 +215,7 @@ bool EFDCore::FileDialogShared(bool bSave, const void* ParentWindowHandle, const
 	return false;
 }
 
-bool EFDCore:: OpenFolderDialogInner(const void* ParentWindowHandle, const FString& DialogTitle, const FString& DefaultPath, FString& OutFolderName)
+bool EFDCore::OpenFolderDialogInner(const void* ParentWindowHandle, const FString& DialogTitle, const FString& DefaultPath, FString& OutFolderName)
 {
 	//FScopedSystemModalMode SystemModalScope;
 
